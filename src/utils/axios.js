@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const customFetch = axios.create({
-  baseURL: "http://localhost:3001/",
+  baseURL: "https://e-commerce-server-nr8x.onrender.com/",
 });
 
 export default customFetch;

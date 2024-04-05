@@ -48,6 +48,6 @@ export const images = [
   { url: "https://images2.imgbox.com/1b/ea/t89LageS_o.jpeg" },
 ];
 
-export const products_url = "http://localhost:3001/products";
+export const products_url = "https://e-commerce-server-nr8x.onrender.com/products";
 
 // const single_product_url = `https://course-api.com/react-store-single-product?id=`;
