@@ -120,7 +120,18 @@ const RegisterWrapper = styled.div`
     border: transparent;
     color: var(--primary-500);
     cursor: pointer;
+    margin:10px;
+    font-size:15px;
+    color: blue;
     letter-spacing: var(--letterSpacing);
+  }
+  input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px;
+    margin-bottom: 10px;
   }
 `;
 

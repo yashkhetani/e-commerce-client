@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 import { FaCheck } from "react-icons/fa";
-import AmountButtons from "./AmountButtons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, getCart } from "../redux/product/productSlice";
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const AddToCart = ({ single_product }) => {
+  const { user } = useSelector((store) => store.auth);
   const { stock, colors } = single_product;
   const [mainColor, setMainColor] = useState(colors[0]);
   const [amount, setAmount] = useState(1);
@@ -31,6 +33,14 @@ const AddToCart = ({ single_product }) => {
     });
   };
 
+  const addtocart = () => {
+    if (!user) {
+      return toast.warn("Login first");
+    }
+    dispatch(addToCart());
+    dispatch(getCart());
+  };
+
   return (
     <Wrapper>
       <div className="colors">
@@ -53,14 +63,23 @@ const AddToCart = ({ single_product }) => {
         </div>
       </div>
       <div className="btn-container">
-        <AmountButtons
-          amount={amount}
-          increase={increase}
-          decrease={decrease}
-        />
-        <Link to="/cart" className="btn">
-          add to cart
-        </Link>
+        {user ? (
+          <button onClick={() => addtocart()} className="btn">
+            add to cart
+          </button>
+        ) : (
+          <Link to="/register" className="btn">
+            add to cart
+          </Link>
+        )}
+
+        {/* cart btn if u want */}
+        {/* <span>&nbsp;</span>
+        <button className="btn">
+          <Link to="/cart" style={{ color: "white" }}>
+            cart
+          </Link>
+        </button> */}
       </div>
     </Wrapper>
   );

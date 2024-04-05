@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   BrowserRouter as Router,
@@ -13,9 +13,30 @@ import Register from "./Auth/Register";
 import { Navbar, Sidebar, Footer } from "./components";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Home, About, Error, Products, SingleProduct, Cart } from "./pages";
+import {
+  Home,
+  About,
+  Error,
+  Products,
+  SingleProduct,
+  Cart,
+  Checkout,
+} from "./pages";
+import { useDispatch, useSelector } from "react-redux";
+import { cartTotal, getCart, SameItems } from "./redux/product/productSlice";
 
 function App() {
+  const { user } = useSelector((store) => store.auth);
+  const { count, cart } = useSelector((store) => store.product);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getCart());
+    dispatch(cartTotal());
+  }, [user, count, dispatch]);
+  useEffect(() => {
+    dispatch(cartTotal());
+    dispatch(SameItems());
+  }, [dispatch, cart]);
   return (
     <Router>
       <Sidebar />
@@ -36,11 +57,11 @@ function App() {
           <Route path="products" element={<Products />} />
           <Route path="products/:id" element={<SingleProduct />} />
           <Route path="*" element={<Error />} />
-          {/* <Route path="checkout" element={<Checkout />} /> */}
+          <Route path="checkout" element={<Checkout />} />
         </Route>
       </Routes>
       <Footer />
-      <ToastContainer position="top-center" limit={1} autoClose={1500} />
+      <ToastContainer position="top-center" autoClose={1000} />
     </Router>
   );
 }

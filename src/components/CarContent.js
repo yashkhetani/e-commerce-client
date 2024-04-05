@@ -4,9 +4,40 @@ import { Link } from "react-router-dom";
 import CartColumns from "./CartColumns";
 import CartItem from "./CartItem";
 import CartTotals from "./CartTotals";
+import { useDispatch, useSelector } from "react-redux";
+import { clearCart } from "../redux/product/productSlice";
 
 const CartContent = () => {
-  return <h4>cart content </h4>;
+  const { cart } = useSelector((store) => store.product);
+
+  const uniqueArr = cart.filter(
+    (obj, index, self) => index === self.findIndex((o) => o.id === obj.id)
+  );
+  const dispatch = useDispatch();
+  return (
+    <Wrapper className="section section-center">
+      <CartColumns />
+      {uniqueArr.map((item, index) => {
+        return <CartItem key={index} {...item} />;
+      })}
+      <hr />
+      <div className="link-container">
+        <Link to="/products" className="link-btn">
+          continue shopping
+        </Link>
+        <button
+          type="button"
+          className="link-btn clear-btn"
+          onClick={() => {
+            dispatch(clearCart());
+          }}
+        >
+          clear shopping cart
+        </button>
+      </div>
+      <CartTotals />
+    </Wrapper>
+  );
 };
 const Wrapper = styled.section`
   .link-container {

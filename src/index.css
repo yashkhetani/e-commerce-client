@@ -207,3 +207,16 @@ p {
 .counter {
   font-size: 2rem;
 }
+
+/* config of scrollbar */
+::-webkit-scrollbar {
+  width: 0rem;
+}
+/* ::-webkit-scrollbar-thumb {
+  background-color: #c2c2c2;
+  border-radius: 0.25em;
+}
+::-webkit-scrollbar-track {
+  background-color: #f2f2f2;
+  border-radius: 0.25em;
+} */

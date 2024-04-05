@@ -6,12 +6,12 @@ import { links } from "../utils/constants";
 import styled from "styled-components";
 import CartButtons from "./CartButtons";
 import { useDispatch, useSelector } from "react-redux";
+import { closeSidebar } from "../redux/product/productSlice";
 
 const Sidebar = () => {
-  // const products = useSelector((store) => store.product);
-  // const { isSidebarOpen } = products;
-  // const dispatch = useDispatch();
-  const isSidebarOpen = true;
+  const { isSidebarOpen } = useSelector((store) => store.product);
+  const dispatch = useDispatch();
+
   return (
     <SidebarContainer>
       <aside
@@ -19,7 +19,12 @@ const Sidebar = () => {
       >
         <div className="sidebar-header">
           <img src={logo} className="logo" alt="coding addict" />
-          <button className="close-btn" onClick={() => {}}>
+          <button
+            className="close-btn"
+            onClick={() => {
+              dispatch(closeSidebar());
+            }}
+          >
             <FaTimes />
           </button>
         </div>
@@ -27,17 +32,17 @@ const Sidebar = () => {
           {links.map(({ id, text, url }) => {
             return (
               <li key={id}>
-                <Link to={url} onClick={() => {}}>
+                <Link
+                  to={url}
+                  onClick={() => {
+                    dispatch(closeSidebar());
+                  }}
+                >
                   {text}
                 </Link>
               </li>
             );
           })}
-          <li>
-            <Link to="/checkout" onClick={() => {}}>
-              checkout
-            </Link>
-          </li>
         </ul>
         <CartButtons />
       </aside>

@@ -11,7 +11,7 @@ const Contact = () => {
             Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id libero
             commodi debitis, fuga enim ab laudantium laboriosam obcaecati
           </p>
-          <form action="" className="contact-form">
+          <form className="contact-form">
             <input
               type="email"
               className="form-input"

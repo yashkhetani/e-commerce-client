@@ -16,7 +16,6 @@ import Sort from "./Sort";
 import Stars from "./Stars";
 import CartContent from "./CarContent";
 import PageHero from "./PageHero";
-import StripeCheckout from "./StripeCheckout";
 import Counter from "./counter";
 
 export {
@@ -38,6 +37,5 @@ export {
   Stars,
   CartContent,
   PageHero,
-  StripeCheckout,
   Counter,
 };

@@ -7,6 +7,7 @@ import { links } from "../utils/constants";
 import CartButtons from "./CartButtons";
 
 import { useDispatch } from "react-redux";
+import { openSidebar } from "../redux/product/productSlice";
 
 const Nav = () => {
   const dispatch = useDispatch();
@@ -17,7 +18,13 @@ const Nav = () => {
           <Link to="/">
             <img src={logo} alt="comfy sloth" />
           </Link>
-          <button type="button" className="nav-toggle" onClick={() => {}}>
+          <button
+            type="button"
+            className="nav-toggle"
+            onClick={() => {
+              dispatch(openSidebar());
+            }}
+          >
             <FaBars />
           </button>
         </div>

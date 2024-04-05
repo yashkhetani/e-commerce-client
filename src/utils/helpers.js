@@ -11,5 +11,5 @@ export const getUniqueValues = (data, type) => {
   if (type === "colors") {
     unique = unique.flat();
   }
-  return ["all", ...new Set(unique)];
+  return ["All", ...new Set(unique)];
 };

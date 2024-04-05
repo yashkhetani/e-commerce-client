@@ -3,24 +3,54 @@ import { FaShoppingCart, FaUserMinus, FaUserPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { closeSidebar } from "../redux/product/productSlice";
 
 const CartButtons = () => {
+  const { user } = useSelector((store) => store.auth);
+  const { cart } = useSelector((store) => store.product);
   const dispatch = useDispatch();
+
   return (
     <Wrapper className="cart-btn-wrapper">
-      <Link to="/cart" className="cart-btn" onClick={() => {}}>
+      <Link
+        to="/cart"
+        className="cart-btn"
+        onClick={() => {
+          dispatch(closeSidebar());
+        }}
+      >
         Cart
         <span className="cart-container">
           <FaShoppingCart />
-          <span className="cart-value">0</span>
+          <span className="cart-value">{cart.length}</span>
         </span>
       </Link>
-      <Link to="/register" onClick={() => {}}>
-        <button type="button" className="auth-btn">
-          Login <FaUserPlus />
+      {user ? (
+        <button
+          type="button"
+          className="auth-btn"
+          onClick={() => {
+            window.location.reload();
+            localStorage.removeItem("user");
+            toast.success("logging out..");
+            dispatch(closeSidebar());
+          }}
+        >
+          Logout <FaUserMinus />
         </button>
-      </Link>
+      ) : (
+        <Link to="/register">
+          <button
+            type="button"
+            className="auth-btn"
+            onClick={() => dispatch(closeSidebar())}
+          >
+            Login <FaUserPlus />
+          </button>
+        </Link>
+      )}
     </Wrapper>
   );
 };

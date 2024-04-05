@@ -15,11 +15,16 @@ const AboutPage = () => {
             <div className="underline"></div>
           </div>
           <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Totam
-            temporibus tempore nesciunt, minima numquam pariatur aliquid
-            voluptatibus voluptates molestias alias quod quis incidunt unde
-            veritatis, exercitationem quae error, facere dolorem! -btw our story
-            is very sad!
+            Our story began with a desire to make a difference in the world. We
+            saw an opportunity to use ecommerce as a platform for change, and we
+            set out to create a business that was not only profitable but also
+            socially responsible and sustainable.
+          </p>
+          <p>
+            Our mission is to offer high-quality products that are both stylish
+            and eco-friendly. We believe that fashion and sustainability can go
+            hand in hand, and we are committed to creating products that are
+            good for people and the planet.
           </p>
         </article>
       </Wrapper>

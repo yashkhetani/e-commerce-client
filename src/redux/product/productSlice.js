@@ -6,11 +6,12 @@ const initialFilterState = {
   search: "",
   category: "All",
   company: "All",
-  price: "0",
+  price: "4000000",
   min_price: "0",
   max_price: "400000",
 };
 const initialState = {
+  cart: [],
   isSidebarOpen: false,
   products_loading: false,
   products_error: false,
@@ -22,6 +23,11 @@ const initialState = {
   listview: false,
   sort: "",
   id: "",
+  count: 1,
+  total_items: 0,
+  total_amount: 0,
+  shipping_fee: 2500,
+  sameitems: [],
   ...initialFilterState,
 };
 
@@ -72,10 +78,73 @@ export const getProductsforfilter = createAsyncThunk(
   }
 );
 
+export const addToCart = createAsyncThunk(
+  "product/addToCart",
+  async (_, thunkAPI) => {
+    const { id } = thunkAPI.getState().product;
+    const { name } = thunkAPI.getState().auth.user;
+
+    try {
+      const resp = await customFetch.post(`/products/${id}`, { id, name });
+      thunkAPI.dispatch(getCart());
+      return resp.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
+
+export const getCart = createAsyncThunk(
+  "product/getCart",
+  async (_, thunkAPI) => {
+    const { name } = thunkAPI.getState().auth.user;
+    try {
+      const resp = await customFetch.post("/cart", { name });
+      return resp.data.cart;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
+
+export const removeProductFromCart = createAsyncThunk(
+  "product/removeProductFromCart",
+  async ({ name, id }, thunkAPI) => {
+    try {
+      const resp = await customFetch.post("/removeproduct", { name, id });
+      thunkAPI.dispatch(getCart());
+      return resp.data.cart;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
+
+export const clearCart = createAsyncThunk(
+  "product/clearCart",
+  async (_, thunkAPI) => {
+    const { name } = thunkAPI.getState().auth.user;
+    try {
+      const resp = await customFetch.post("/clearcart", { name });
+
+      return resp.data.cart;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
+
+//slice
 const productsSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
+    openSidebar: (state) => {
+      state.isSidebarOpen = true;
+    },
+    closeSidebar: (state) => {
+      state.isSidebarOpen = false;
+    },
     togglelistview: (state, { payload }) => {
       state.listview = payload;
     },
@@ -87,6 +156,27 @@ const productsSlice = createSlice({
     },
     clearFilters: (state) => {
       return { ...state, ...initialFilterState };
+    },
+    cartTotal: (state) => {
+      const { total_items, total_amount } = state.cart.reduce(
+        (total, cartItem) => {
+          const { price } = cartItem;
+          const amount = 1;
+          total.total_items += amount;
+          total.total_amount += price * amount;
+          return total;
+        },
+        { total_items: 0, total_amount: 0 }
+      );
+      return { ...state, total_items, total_amount };
+    },
+    SameItems: (state) => {
+      const counts = state.cart.reduce((acc, curr) => {
+        const id = curr.id;
+        acc[id] = acc[id] ? acc[id] + 1 : 1;
+        return acc;
+      }, {});
+      state.sameitems = counts;
     },
   },
   extraReducers: (builder) => {
@@ -122,10 +212,38 @@ const productsSlice = createSlice({
         state.isLoading = false;
         state.single_product_error = true;
         toast.error(payload);
+      })
+      .addCase(addToCart.fulfilled, (state) => {
+        toast.success("added to cart");
+      })
+      .addCase(addToCart.rejected, () => {
+        toast.error("something went wrong!");
+      })
+
+      .addCase(getCart.fulfilled, (state, { payload }) => {
+        state.cart = payload;
+      })
+      .addCase(getCart.rejected, ({ payload }) => {
+        toast.error(payload);
+      })
+      .addCase(clearCart.fulfilled, (state, { payload }) => {
+        state.cart = [];
+        toast.success(payload);
+      })
+      .addCase(removeProductFromCart.fulfilled, ({ payload }) => {
+        toast.success(payload);
       });
   },
 });
 
-export const { togglelistview, handleChange, loadId, clearFilters } =
-  productsSlice.actions;
+export const {
+  togglelistview,
+  handleChange,
+  loadId,
+  clearFilters,
+  openSidebar,
+  closeSidebar,
+  cartTotal,
+  SameItems,
+} = productsSlice.actions;
 export default productsSlice.reducer;
